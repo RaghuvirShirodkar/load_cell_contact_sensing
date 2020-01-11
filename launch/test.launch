@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="load_cell_contact_sensing" type="moving_average.py" name="moving_average" output="screen" required="true"/>
+    <node pkg="load_cell_contact_sensing" type="load_cell_intent_controller.py" name="load_cell_intent_controller" output="screen" required="true"/>
+
+</launch>
+
