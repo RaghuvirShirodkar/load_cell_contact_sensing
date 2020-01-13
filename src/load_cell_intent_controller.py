@@ -2,7 +2,7 @@
 import rospy
 import numpy as np
 import time
-from std_msgs.msg import UInt32MultiArray
+from std_msgs.msg import UInt32MultiArray, Float64
 from geometry_msgs.msg import Twist
 from force_analysis import ForceAnalysis
 
@@ -11,7 +11,8 @@ class LoadCellIntentController:
     def __init__(self):
 
         self.msg_received = False
-        self.pub_ = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+        self.cmd_pub_ = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+        self.intent_pub_ = rospy.Publisher('/intent', Float64, queue_size=1)
         rospy.Subscriber('/load_cell/filtered_readings', UInt32MultiArray, self._callback)
 
     def _callback(self, msg):
@@ -42,16 +43,21 @@ class LoadCellIntentController:
         self.msg_received = False
 
         x, y = self._get_velocity_magnitude(index)
-        pub_object = Twist()
+        cmd_pub_object = Twist()
+        intent_pub_object = Float64()
 
-        while time.time() - start < 2.:
-            pub_object.linear.x = x
-            pub_object.linear.y = y
-            pub_object.angular.z = angle_
-            self.pub_.publish(pub_object)
+        while time.time() - start < 1.:
+            intent_pub_object.data = 40000
+            self.intent_pub_.publish(intent_pub_object)
+            #cmd_pub_object.linear.x = x
+            #cmd_pub_object.linear.y = y
+            #cmd_pub_object.angular.z = angle_
+            #self.cmd_pub_.publish(cmd_pub_object)
 
-        pub_object = Twist()
-        self.pub_.publish(pub_object)
+        intent_pub_object = Float64()
+        self.intent_pub_.publish(intent_pub_object)
+        #cmd_pub_object = Twist()
+        #self.cmd_pub_.publish(cmd_pub_object)
 
 if __name__ == '__main__':
 
