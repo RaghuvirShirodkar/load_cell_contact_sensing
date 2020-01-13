@@ -88,5 +88,6 @@ class MovingAverage:
 if __name__ == '__main__':
 
     n = rospy.init_node('moving_average')
-    test = MovingAverage(averaging_type='exponential', alpha=0.125)
+    #test = MovingAverage(averaging_type='exponential', alpha=0.125)
+    test = MovingAverage(averaging_type='simple', window_size=25)
     rospy.spin()
